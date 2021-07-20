@@ -549,6 +549,9 @@ DataFrame >> column: columnName put: anArray [
 	"Replace the current values of column with columnName with anArray or signal an exception if a column with that name was not found"
 	| index |
 	index := self indexOfColumnNamed: columnName.
+	
+	dataTypes at: columnName put: (anArray asDataSeries calculateDataType).
+	
 	^ self columnAt: index put: anArray.
 ]
 
@@ -595,6 +598,7 @@ DataFrame >> columnAt: aNumber put: anArray [
 	anArray size = self numberOfRows
 		ifFalse: [ SizeMismatch signal ].	
 	
+	dataTypes at:( columnNames at: aNumber) put: (anArray asDataSeries calculateDataType).
 	contents columnAt: aNumber put: anArray.
 ]
 
@@ -649,7 +653,9 @@ DataFrame >> columns: anArrayOfColumnNames put: anArrayOfArrays [
 		ifFalse: [ SizeMismatch signal ].	
 	
 	anArrayOfColumnNames with: anArrayOfArrays do: [ :name :array |
-		self column: name put: array ].
+		self column: name put: array.
+		dataTypes at: name put: (array asDataSeries calculateDataType).
+		].
 ]
 
 { #category : #accessing }
@@ -673,7 +679,9 @@ DataFrame >> columnsAt: anArrayOfNumbers put: anArrayOfArrays [
 		ifFalse: [ SizeMismatch signal ].	
 	
 	anArrayOfNumbers with: anArrayOfArrays do: [ :index :array |
-		self columnAt: index put: array ].
+		self columnAt: index put: array.
+		self dataTypes at: (columnNames at: index) put: (array asDataSeries calculateDataType).
+		].
 ]
 
 { #category : #accessing }
@@ -701,7 +709,9 @@ DataFrame >> columnsFrom: firstNumber to: secondNumber put: anArrayOfArrays [
 		ifFalse: [ (secondNumber to: firstNumber) reversed ].
 	
 	interval withIndexDo: [ :columnIndex :i |
-		self columnAt: columnIndex put: (anArrayOfArrays at: i) ].
+		self columnAt: columnIndex put: (anArrayOfArrays at: i).
+		self dataTypes at: (columnNames at: columnIndex) put: (anArrayOfArrays at: i) asDataSeries calculateDataType.
+		].
 ]
 
 { #category : #accessing }

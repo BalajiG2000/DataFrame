@@ -1356,6 +1356,28 @@ DataFrameTest >> testDataTypesOfEmptyDataFrameWithColumnNames [
 	self assert: dataFrame dataTypes equals: expected.
 ]
 
+{ #category : #tests }
+DataFrameTest >> testDataTypesWhenColumnAtPut [
+
+	| actual expectedDataTypes |
+
+	actual :=  DataFrame withRows: #((1 'value1'  3.56)
+	(2 'value2' 5.66)
+	(3 'value3' 7.88)).
+	actual rowNames: #(Row1 Row2 Row3).
+	actual columnNames: #('A' 'B' 'C').
+	
+	actual columnAt: 1 put: #(4.5 6.7 8.9).
+	actual columnAt: 3 put: #(true true false).
+	
+	expectedDataTypes  :={ 
+	'A' -> SmallFloat64.
+	'B' -> ByteString.
+	'C' -> Boolean.
+	} asDictionary.
+	self assert: actual dataTypes equals: expectedDataTypes.
+]
+
 { #category : #'data-types' }
 DataFrameTest >> testDataTypesWhenColumnIsAdded [
 			
@@ -1389,6 +1411,28 @@ DataFrameTest >> testDataTypesWhenColumnIsRemoved [
 	self assert: df dataTypes equals: expected.
 ]
 
+{ #category : #tests }
+DataFrameTest >> testDataTypesWhenColumnPut [
+
+	| actual expectedDataTypes |
+
+	actual :=  DataFrame withRows: #((1 'value1'  3.56)
+	(2 'value2' 5.66)
+	(3 'value3' 7.88)).
+	actual rowNames: #(Row1 Row2 Row3).
+	actual columnNames: #('A' 'B' 'C').
+	
+	actual column: 'A' put: #(4.5 6.7 8.9).
+	actual column: 'C' put: #(true true false).
+	
+	expectedDataTypes  :={ 
+	'A' -> SmallFloat64.
+	'B' -> ByteString.
+	'C' -> Boolean.
+	} asDictionary.
+	self assert: actual dataTypes equals: expectedDataTypes.
+]
+
 { #category : #'data-types' }
 DataFrameTest >> testDataTypesWhenColumnsAreRenamed [
 			
@@ -1402,6 +1446,69 @@ DataFrameTest >> testDataTypesWhenColumnsAreRenamed [
 	} asDictionary.
 	
 	self assert: df dataTypes equals: expected."
+]
+
+{ #category : #tests }
+DataFrameTest >> testDataTypesWhenColumnsAtPut [
+
+	| actual expectedDataTypes |
+
+	actual :=  DataFrame withRows: #((1 'value1'  3.56)
+	(2 'value2' 5.66)
+	(3 'value3' 7.88)).
+	actual rowNames: #(Row1 Row2 Row3).
+	actual columnNames: #('A' 'B' 'C').
+	
+	actual columnsAt: #(1 3) put: #((4.5 6.7 8.9) (true true false)).
+	
+	expectedDataTypes  :={ 
+	'A' -> SmallFloat64.
+	'B' -> ByteString.
+	'C' -> Boolean.
+	} asDictionary.
+	self assert: actual dataTypes equals: expectedDataTypes.
+]
+
+{ #category : #tests }
+DataFrameTest >> testDataTypesWhenColumnsFromToPut [
+
+	| actual expectedDataTypes |
+
+	actual :=  DataFrame withRows: #((1 'value1'  3.56)
+	(2 'value2' 5.66)
+	(3 'value3' 7.88)).
+	actual rowNames: #(Row1 Row2 Row3).
+	actual columnNames: #('A' 'B' 'C').
+	
+	actual columnsFrom: 1 to: 3  put: #((4.5 6.7 8.9) (true true false) (1 2 3)).
+	
+	expectedDataTypes  :={ 
+	'A' -> SmallFloat64.
+	'B' -> Boolean.
+	'C' -> SmallInteger.
+	} asDictionary.
+	self assert: actual dataTypes equals: expectedDataTypes.
+]
+
+{ #category : #tests }
+DataFrameTest >> testDataTypesWhenColumnsPut [
+
+	| actual expectedDataTypes |
+
+	actual :=  DataFrame withRows: #((1 'value1'  3.56)
+	(2 'value2' 5.66)
+	(3 'value3' 7.88)).
+	actual rowNames: #(Row1 Row2 Row3).
+	actual columnNames: #('A' 'B' 'C').
+	
+	actual columns: #('A' 'C') put: #((4.5 6.7 8.9) (true true false)).
+	
+	expectedDataTypes  :={ 
+	'A' -> SmallFloat64.
+	'B' -> ByteString.
+	'C' -> Boolean.
+	} asDictionary.
+	self assert: actual dataTypes equals: expectedDataTypes.
 ]
 
 { #category : #'data-types' }
