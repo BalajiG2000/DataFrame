@@ -1994,6 +1994,18 @@ DataSeriesTest >> testStatsZerothQuartileEqualsMin [
 	self assert: series zerothQuartile equals: series min.
 ]
 
+{ #category : #statistics }
+DataSeriesTest >> testStatscumulativeSum [
+
+	| expected actual |
+	actual := DataSeries withValues: #( 3 4 nil 1 6 0 9 8 ).
+	expected := DataSeries withValues: #( 3 7 7 8 14 14 23 31 ).
+	expected
+		name: #CumulativeSum;
+		keys: actual values.
+	self assert: actual cumulativeSum equals: expected
+]
+
 { #category : #'head/tail' }
 DataSeriesTest >> testTail [
 	| expected actual |
